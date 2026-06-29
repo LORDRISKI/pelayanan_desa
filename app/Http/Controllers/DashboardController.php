@@ -3,34 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Resident;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Ambil data statistik dari database
-        $totalResidents = Resident::count();
-        $totalMale = Resident::where('gender', 'L')->count();
-        $totalFemale = Resident::where('gender', 'P')->count();
-        $totalUsers = User::count();
+        // Hitung menggunakan query LIKE (Case-Insensitive) agar format apapun di database tetap terbaca
+        $lakiLaki = Resident::where('gender', 'LIKE', '%laki%')->count();
+        $perempuan = Resident::where('gender', 'LIKE', '%perempuan%')->count();
 
-        // 2. Pembagian data status perkawinan untuk Chart.js
-        $maritalData = [
-            'Belum_Kawin' => Resident::where('marital_status', 'Belum Kawin')->count(),
-            'Kawin' => Resident::where('marital_status', 'Kawin')->count(),
-            'Cerai_Hidup' => Resident::where('marital_status', 'Cerai Hidup')->count(),
-            'Cerai_Mati' => Resident::where('marital_status', 'Cerai Mati')->count(),
-        ];
+        // Hitung Berdasarkan Status Perkawinan (Gunakan LIKE juga agar lebih aman)
+        $kawin = Resident::where('marital_status', 'LIKE', '%Kawin%')->where('marital_status', 'NOT LIKE', '%Belum%')->count();
+        $belumKawin = Resident::where('marital_status', 'LIKE', '%Belum%')->count();
+        $janda = Resident::where('marital_status', 'LIKE', '%Janda%')->count();
+        $duda = Resident::where('marital_status', 'LIKE', '%Duda%')->count();
 
-        // 3. Kirim data ke halaman dashboard view
         return view('dashboard', compact(
-            'totalResidents', 
-            'totalMale', 
-            'totalFemale', 
-            'totalUsers', 
-            'maritalData'
+            'lakiLaki', 'perempuan', 
+            'kawin', 'belumKawin', 'janda', 'duda'
         ));
     }
 }

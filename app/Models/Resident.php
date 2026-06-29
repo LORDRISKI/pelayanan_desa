@@ -29,4 +29,13 @@ class Resident extends Model
     {
         return $this->hasMany(Letter::class);
     }
+
+    /**
+    * Aksesor untuk menghitung umur secara otomatis dari birth_date.
+    * Panggil di blade dengan: $resident->age
+    */
+    public function getAgeAttribute()
+    {
+    return \Carbon\Carbon::parse($this->birth_date)->age;
+    }
 }
