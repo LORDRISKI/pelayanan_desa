@@ -10,7 +10,23 @@ class Resident extends Model
     use HasFactory;
 
     protected $fillable = [
-        'no_kk', 'nik', 'name', 'gender', 'birth_place', 
-        'birth_date', 'marital_status', 'religion', 'profession', 'address'
+        'no_kk', 
+        'nik', 
+        'name', 
+        'gender', 
+        'birth_place', 
+        'birth_date', 
+        'marital_status', 
+        'religion', 
+        'profession', 
+        'address'
     ];
+
+    /**
+     * Relasi ke model Letter (Satu penduduk bisa memiliki banyak surat).
+     */
+    public function letters()
+    {
+        return $this->hasMany(Letter::class);
+    }
 }
